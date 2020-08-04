@@ -1,7 +1,9 @@
 library(tidyverse)
 library(tidyr)
 library(Matrix)
-
+#the data was scraped from the nhl website using api https://github.com/HarryShomer/Hockey-Scraper
+#becasue the data is very memory consuming and wrangling data to the format from the article you need a lot of memory
+# to ensure you don't run out of memory you can divide the data to the events that you need for the analysis and then run the code. 
 nhl_pbp20162017 <- read_csv("D:/Hockey Project/nhl_pbp20182019.csv")
 shots = which(nhl_pbp20162017[,"Event"]=="SHOT")
 goals = which(nhl_pbp20162017[,"Event"]=="GOAL")
@@ -111,6 +113,13 @@ event_data_1 <- event_data #offense data
 event_data_2 <- event_data #defense data
 ha_eve = sort(c(away_eve,home_eve), decreasing = FALSE)
 
+#as the articl suggests, the matrix is divided in four parts, if they are home player and they are on the def side (Call this D), if they are home players and they are on the
+#attacking side(Call this X), and the same for the away players. The matrix looks like this 
+#DX
+#XD
+
+# in this part we are looking for the players that were in the specific event and based on the event_data that is built above, we are putting 1 or 0s below the players ID (column names)
+# this is simple searching for loop to find the players that were in the event. 
 for (i in home_eve){
   print(i)
   j=c("homePlayer1_id","homePlayer2_id","homePlayer3_id","homePlayer4_id","homePlayer5_id")
@@ -121,7 +130,7 @@ for (i in home_eve){
   event_data_1[i,num_col+7]=1 #Assign 1 if the player was involved in the event
 }
 
-
+#testing the result
 which(event_data_1[157208,] ==1)
 #event_data_3 <- Matrix(event_data_1)
 for (i in away_eve){
